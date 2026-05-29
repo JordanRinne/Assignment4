@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    
+    <div style = "display:flex; flex-direction: column; align-items: center;">
+        <div style="border: 2px solid black; box-shadow: none; padding-left:20px; border-radius: 10px; width: 80%; background-color: #fff;">
+            <h3>{{ user.username }}</h3>
+            {% if user.bio %}
+            <i><p>{{user.bio}}</p></i>
+            <p style = "color: gray; font-size: 12px; padding-bottom: 10px;">Bio updated at: {{user.biots}}</p>
+            {% endif %}
+        </div>
+        <h3>{{user.username}}'s Posts</h3>
+    <div style = "border-radius: 10px; background-color: rgb(255, 255, 255); width: 80%; padding: 10px; border-width:2px; border-style: solid;">
+        
+        {% if not user.posts %}
+            <h4>Nothing to see here...</h4>
+        {% else %}
+        
+        {% for post in user.posts %}
+        <div class="post">
+            <div>
+            <i><h4>{{ post.entry }}</h4></i>
+            <small>Posted @ {{ post.timestamp }} </small>
+            </div>
+            
+        </div>
+        {% if user.posts|length > 1 and not loop.last %}
+        <hr margin:auto;/>
+
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+    </div>
+
+</body>
+
+{% endblock %}
+</html>

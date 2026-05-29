@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color:antiquewhite; }
+        .post { padding: 10px; }
+        h2 { margin: 0; }
+        small { color: gray; }
+        .header-link {text-decoration: none;
+            color: inherit;}
+    </style>
+</head>
+    <body>
+        <a class ="header-link" href="{{ url_for('posts') }}"><h3>ICS32 Distributed Social Platform</h3></a>
+        <hr style="border: 1px solid black; height: 0; box-shadow: none;">
+
+        {% block content %} {% endblock %}
+    </body>
+</html>

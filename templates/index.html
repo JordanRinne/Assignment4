@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style = "display:flex; flex-direction: column; align-items: center;">
+        <h3>All Posts</h3>
+    <div style = "border-radius: 10px; background-color: rgb(255, 255, 255); width: 80%; padding: 10px; border-width:2px; border-style: solid;">
+
+        {% if not posts %}
+            <h4>Nothing to see here...</h4>
+        {% else %}
+        
+        {% for post in posts %}
+        <div class="post">
+            <div>
+            <b><a href="{{ url_for('user_profile', username=post.user) }}">{{ post.user }}<a></b>
+            <small> @{{ post.timestamp }} </small>
+            </div>
+            <i><p>{{ post.entry }}</p></i>
+        </div>
+        {% if posts|length > 1 and not loop.last %}
+        <hr style ="margin:auto;"/>
+
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+    </div>
+    
+
+{% endblock %}
