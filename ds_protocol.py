@@ -14,9 +14,6 @@ def extract_json(json_msg: str) -> DataTuple:
     '''
     Call the json.loads function on a json string and convert
     it to a DataTuple object
-
-    TODO: replace the pseudo placeholder keys with actual
-    DSP protocol keys
     '''
     try:
         json_obj = json.loads(json_msg)
@@ -30,7 +27,7 @@ def extract_json(json_msg: str) -> DataTuple:
         return DataTuple(response_type, message, token, messages)
 
     except json.JSONDecodeError:
-        return DataTuple('error', 'Json cannot be decoded.', '', [])
+        return DataTuple('error', 'json cannot be decoded.', '', [])
 
 
 def join_msg(username: str, password: str) -> str:
@@ -48,7 +45,6 @@ def join_msg(username: str, password: str) -> str:
             "token": ""
         }
     }
-
     return json.dumps(message)
 
 
@@ -61,7 +57,6 @@ def post_msg(token: str, entry: str, timestamp: str) -> str:
     :param entry: The entry to be sent to the server.
     :param timestamp: The timestamp associated with the entry.
     '''
-
     message = {
         "token": token,
         "post": {
@@ -81,12 +76,39 @@ def bio_msg(token: str, entry: str, timestamp: str) -> str:
     :param entry: The entry to be updated on the server.
     :param timestamp: The timestamp associated with the entry.
     '''
-
     message = {
         "token": token,
         "bio": {
             "entry": entry,
             "timestamp": timestamp
         }
+    }
+    return json.dumps(message)
+
+
+def direct_msg(token: str, entry: str, recipient: str, timestamp: str) -> str:
+    message = {
+        "token": token,
+        "directmessage": {
+            "entry": entry,
+            "recipient": recipient,
+            "timestamp": timestamp
+        }
+    }
+    return json.dumps(message)
+
+
+def direct_msg_unread(token: str) -> str:
+    message = {
+        "token": token,
+        "directmessage": "new"
+    }
+    return json.dumps(message)
+
+
+def direct_msg_all(token: str) -> str:
+    message = {
+        "token": token,
+        "directmessage": "all"
     }
     return json.dumps(message)
