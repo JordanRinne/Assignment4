@@ -98,7 +98,7 @@ def direct_msg(token: str, entry: str, recipient: str, timestamp: str) -> str:
     return json.dumps(message)
 
 
-def direct_msg_unread(token: str) -> str:
+def direct_msg_new(token: str) -> str:
     message = {
         "token": token,
         "directmessage": "new"

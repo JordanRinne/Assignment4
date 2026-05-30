@@ -23,8 +23,8 @@ def test_direct_message():
     assert json_obj["directmessage"]["timestamp"] == "2024-06-01T12:00:00Z"
 
 
-def test_direct_message_unread():
-    result = ds_protocol.direct_msg_unread(token="abc123")
+def test_direct_message_new():
+    result = ds_protocol.direct_msg_new(token="abc123")
     
     json_obj = json.loads(result)
 
@@ -39,6 +39,25 @@ def test_direct_message_all():
 
     assert json_obj["token"] == "abc123"
     assert json_obj["directmessage"] == "all"
+
+
+def test_extract_join_response():
+    response = '''
+    {
+      "response": {
+        "type": "ok",
+        "message": "Welcome!",
+        "token": "abc123"
+      }
+    }
+    '''
+
+    result = ds_protocol.extract_json(response)
+
+    assert result.type == 'ok'
+    assert result.message == 'Welcome!'
+    assert result.token == 'abc123'
+    assert result.messages == []
 
 
 def test_extract_direct_msg_send_response():
