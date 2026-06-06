@@ -149,3 +149,21 @@ def test_extract_bad_json():
     assert result.message == 'json cannot be decoded.'
     assert result.token == ''
     assert result.messages == []
+
+
+def test_extract_error_response():
+    response = '''
+    {
+      "response": {
+        "type": "error",
+        "message": "Invalid token"
+      }
+    }
+    '''
+
+    result = ds_protocol.extract_json(response)
+
+    assert result.type == 'error'
+    assert result.message == 'Invalid token'
+    assert result.token == ''
+    assert result.messages == []
