@@ -3,6 +3,7 @@
 # 16935997
 
 import socket
+import json
 import ds_protocol
 import time
 
@@ -26,13 +27,12 @@ class DirectMessenger:
         self.password = password
         self.token = None
 
-    def send(self, message: str, recipient: str) -> bool:
-        if not self._ensure_token():
-            return False
 
+    def send(self, message: str, recipient: str) -> bool:
         timestamp = str(time.time())
+        print(f"\nDEBUG TOKEN: '{self.token}'")
         request = ds_protocol.direct_msg(
-            token=self.token,
+            token="",
             entry=message,
             recipient=recipient,
             timestamp=timestamp
@@ -40,15 +40,16 @@ class DirectMessenger:
         response = self._send_request(request)
 
         if response is None:
+            print("No response received from server")
             return False
         
+        if response.type != 'ok':
+            print(f"Error sending message: {response.message}")
+
         return response.type == 'ok'
 
 
     def retrieve_new(self) -> list:
-        if not self._ensure_token():
-            return []
-        
         request = ds_protocol.direct_msg_new(
             token=self.token
         )
@@ -61,9 +62,6 @@ class DirectMessenger:
 
 
     def retrieve_all(self) -> list:
-        if not self._ensure_token():
-            return []
-        
         request = ds_protocol.direct_msg_all(
             token=self.token
         )
@@ -74,13 +72,13 @@ class DirectMessenger:
         
         return self._convert_messages(response.messages)
 
-
+    """
     def _ensure_token(self) -> bool:
         if self.token is not None:
             return True
         
         return self._join()
-    
+
 
     def _join(self) -> bool:
         if not self.dsuserver or not self.username or not self.password:
@@ -97,17 +95,31 @@ class DirectMessenger:
             return True
 
         return False
-    
+    """
 
     def _send_request(self, request: str):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((self.dsuserver, PORT))
-                s.sendall(request.encode())
-                
                 f = s.makefile('r')
-                response = f.read()
 
+                if '"join: "' not in request:
+                    join_request = ds_protocol.join_msg(self.username, self.password) + "\n"
+                    s.sendall(join_request.encode())
+                    join_response = f.readline()
+                    
+                    join_tuple = ds_protocol.extract_json(join_response)
+                    if join_tuple.type != 'ok':
+                        return None
+                        
+                    req_dict = json.loads(request)
+                    req_dict['token'] = join_tuple.token
+                    request = json.dumps(req_dict)
+
+                formatted_request = request + '\n'
+                s.sendall(formatted_request.encode())
+                
+                response = f.readline()
                 return ds_protocol.extract_json(response)
 
         except Exception as ex:
