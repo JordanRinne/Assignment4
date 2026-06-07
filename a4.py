@@ -265,8 +265,10 @@ class MainApp(tk.Frame):
                     entry = msg.message
                     timestamp = msg.timestamp
 
-                    if sender not in self.profile.messages:
-                        self.profile.add_recipient(sender)
+                    if sender not in self.body._contacts:
+                        if sender not in self.profile.messages:
+                            self.profile.add_recipient(sender)
+                            self.profile.messages[sender] = []
                         self.body.insert_contact(sender)
                     
                     if self.recipient != sender:
