@@ -228,11 +228,10 @@ class Profile:
     def get_recipients(self) -> list:
         return list(self.messages.keys())
 
-
     def add_message(self, message_obj) -> None:
         recipient = message_obj.recipient
         self.add_recipient(recipient)
-        
+
         msg_dict = {
             "entry": message_obj.message,
             "recipient": recipient,
@@ -241,7 +240,6 @@ class Profile:
             "direction": message_obj.direction
         }
         self.messages[recipient].append(msg_dict)
-
 
     def get_messages(self, sender: str) -> list:
         return self.messages.get(sender, [])

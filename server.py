@@ -536,5 +536,3 @@ if __name__ == '__main__':
         port2 = int(sys.argv[2])
    
     run_servers(host,port1,port2)
-
-

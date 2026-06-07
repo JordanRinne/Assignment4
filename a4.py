@@ -10,6 +10,7 @@ from Profile import Profile
 from ds_messenger import DirectMessenger
 import time
 
+
 class Body(tk.Frame):
     def __init__(self, root, recipient_selected_callback=None):
         tk.Frame.__init__(self, root)
@@ -37,18 +38,18 @@ class Body(tk.Frame):
             entry = contact[:24] + "..."
         id = self.posts_tree.insert('', id, id, text=contact)
 
-    def insert_user_message(self, message:str):
+    def insert_user_message(self, message: str):
         self.entry_editor.insert('end', message + '\n', 'entry-right')
         self.entry_editor.see('end')
 
-    def insert_contact_message(self, message:str):
+    def insert_contact_message(self, message: str):
         self.entry_editor.insert('end', message + '\n', 'entry-left')
         self.entry_editor.see('end')
 
     def get_text_entry(self) -> str:
         return self.message_editor.get('1.0', 'end').rstrip()
 
-    def set_text_entry(self, text:str):
+    def set_text_entry(self, text: str):
         self.message_editor.delete(1.0, tk.END)
         self.message_editor.insert(1.0, text)
 
@@ -141,14 +142,13 @@ class NewContactDialog(simpledialog.Dialog):
         # but you will want to add self.password_entry['show'] = '*'
         # such that when the user types, the only thing that appears are
         # * symbols.
-        #self.password...
+        # self.password...
         self.password_label = tk.Label(frame, width=30, text="Password")
         self.password_label.pack()
-        self.password_entry = tk.Entry(frame, width=30, show='*') 
+        self.password_entry = tk.Entry(frame, width=30, show='*')
         if self.pwd:
             self.password_entry.insert(tk.END, self.pwd)
         self.password_entry.pack()
-
 
     def apply(self):
         self.user = self.username_entry.get()
@@ -166,35 +166,40 @@ class MainApp(tk.Frame):
         self.recipient = ''
         # You must implement this! You must configure and
         # instantiate your DirectMessenger instance after this line.
-        #self.direct_messenger = ... continue!
+        # self.direct_messenger = ... continue!
         self.profile = Profile()
         self.direct_messenger = None
         # After all initialization is complete,
         # call the _draw method to pack the widgets
         # into the root frame
         self._draw()
-        self.body.insert_contact("studentexw23") # adding one example student.
+        self.body.insert_contact("studentexw23")  # adding one example student.
 
     def send_message(self):
         # You must implement this!
         message_text = self.body.get_text_entry()
         print(f"DEBUG - Message text: '{message_text}'")
         print(f"DEBUG - Recipient: '{self.recipient}'")
-        print(f"DEBUG - Messenger initialized?: {self.direct_messenger is not None}")
+        print(
+            "DEBUG - Messenger initialized?: "
+            f"{self.direct_messenger is not None}"
+        )
         # Guard clause: don't send if there's no text or no recipient selected!
         if not message_text or not self.recipient or not self.direct_messenger:
-            print("DEBUG - Send aborted! One of the three items above is missing.")
-            return 
-            
+            print(
+                "DEBUG - Send aborted! One of the 3 items above is missing."
+            )
+            return
+
         # 2. Send it over the network!
         print("DEBUG - Attempting to send over network...")
         success = self.direct_messenger.send(message_text, self.recipient)
-        
+
         if success:
             print("DEBUG - Network send successful! Drawing on screen...")
             # 3. Visually draw the message on the right side of the screen
             self.body.insert_user_message(message_text)
-            
+
             # 4. Save the message to your local dictionary
             msg_data = {
                 "message": message_text,
@@ -206,7 +211,7 @@ class MainApp(tk.Frame):
             }
             self.profile.messages[self.recipient].append(msg_data)
             self.profile.save_profile(f"{self.username}.dsu")
-            
+
             # 5. Clear the input box so you can type your next message
             self.body.set_text_entry("")
         else:
@@ -217,7 +222,9 @@ class MainApp(tk.Frame):
         # Hint: check how to use tk.simpledialog.askstring to retrieve
         # the name of the new contact, and then use one of the body
         # methods to add the contact to your contact list
-        new_contact = simpledialog.askstring("Add Contact", "Enter friend's username:")
+        new_contact = simpledialog.askstring(
+            "Add Contact", "Enter friend's username:"
+        )
         if new_contact:
             self.profile.add_recipient(new_contact)
             if self.username:
@@ -229,7 +236,7 @@ class MainApp(tk.Frame):
 
         # 2. Clear the main chat window completely
         self.body.entry_editor.delete('1.0', 'end')
-        
+
         # 3. Look up this friend in your profile and print their history
         if recipient in self.profile.messages:
             for msg_dict in self.profile.messages[recipient]:
@@ -247,12 +254,14 @@ class MainApp(tk.Frame):
         self.password = ud.pwd
         self.server = ud.server
 
-        self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
+        self.direct_messenger = DirectMessenger(
+            self.server, self.username, self.password
+        )
         self.profile.load_profile(f"{self.username}.dsu")
 
         self.check_new()
 
-    def publish(self, message:str):
+    def publish(self, message: str):
         # You must implement this!
         pass
 
@@ -273,7 +282,7 @@ class MainApp(tk.Frame):
                             self.profile.add_recipient(sender)
                             self.profile.messages[sender] = []
                         self.body.insert_contact(sender)
-                    
+
                     if self.recipient != sender:
                         self.body.insert_contact_message(f"{sender}: {entry}")
 
@@ -353,8 +362,7 @@ if __name__ == "__main__":
     # behavior of the window changes.
     main.update()
     main.minsize(main.winfo_width(), main.winfo_height())
-    id = main.after(2000, app.check_new)
-    print(id)
+
     # And finally, start up the event loop for the program (you can find
     # more on this in lectures of week 9 and 10).
     main.mainloop()
