@@ -241,19 +241,50 @@ class MainApp(tk.Frame):
         self.username = ud.user
         self.password = ud.pwd
         self.server = ud.server
-        # You must implement this!
-        # You must configure and instantiate your
-        # DirectMessenger instance after this line.
+
         self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
         self.profile.load_profile(f"{self.username}.dsu")
+        
+        self.check_new()
 
     def publish(self, message:str):
         # You must implement this!
         pass
 
     def check_new(self):
-        # You must implement this!
-        pass
+        if self.direct_messenger is not None:
+            new_messages = self.direct_messenger.retrieve_new()
+
+            if new_messages:
+                profile_updated = False
+
+                for msg in new_messages:
+                    sender = msg.sender
+                    entry = msg.message
+                    timestamp = msg.timestamp
+
+                    if sender not in self.profile.messages:
+                        self.profile.add_recipient(sender)
+                        self.body.insert_contact(sender)
+                    
+                    self.body.insert_contact_message(f"{sender}: {entry}")
+                    msg_data = {
+                        "entry": entry,
+                        "recipient": self.username,
+                        "timestamp": timestamp,
+                        "sender": sender,
+                        "direction": "received"
+                    }
+                    self.profile.messages[sender].append(msg_data)
+                    profile_updated = True
+
+                    if self.recipient == sender:
+                        self.body.insert_contact_message(entry)
+
+                if profile_updated:
+                    self.profile.save_profile(f"{self.username}.dsu")
+
+        self.root.after(3000, self.check_new)
 
     def _draw(self):
         # Build a menu and add it to the root frame.
