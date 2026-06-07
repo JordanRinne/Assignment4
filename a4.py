@@ -38,10 +38,12 @@ class Body(tk.Frame):
         id = self.posts_tree.insert('', id, id, text=contact)
 
     def insert_user_message(self, message:str):
-        self.entry_editor.insert(1.0, message + '\n', 'entry-right')
+        self.entry_editor.insert('end', message + '\n', 'entry-right')
+        self.entry_editor.see('end')
 
     def insert_contact_message(self, message:str):
-        self.entry_editor.insert(1.0, message + '\n', 'entry-left')
+        self.entry_editor.insert('end', message + '\n', 'entry-left')
+        self.entry_editor.see('end')
 
     def get_text_entry(self) -> str:
         return self.message_editor.get('1.0', 'end').rstrip()

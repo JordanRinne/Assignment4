@@ -10,7 +10,7 @@ print("Connecting as testuser2...")
 messenger = DirectMessenger("127.0.0.1", "testuser2", "password123")
 
 # Send a message to your main account
-message_text = f"Hello from the test script! The time is {time.time()}"
+message_text = f"WOOOAHHHHH..... The time is {time.time()}"
 recipient = "testuser"
 
 print(f"Sending message to '{recipient}'...")
