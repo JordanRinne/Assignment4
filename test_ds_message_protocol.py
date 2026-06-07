@@ -5,6 +5,7 @@
 
 import ds_protocol
 import json
+#import pytest
 
 
 def test_direct_message():
@@ -58,6 +59,15 @@ def test_extract_join_response():
     assert result.message == 'Welcome!'
     assert result.token == 'abc123'
     assert result.messages == []
+
+
+def test_join_msg():
+    result = ds_protocol.join_msg("testuser", "password123")
+    json_obj = json.loads(result)
+
+    assert json_obj["join"]["username"] == "testuser"
+    assert json_obj["join"]["password"] == "password123"
+    assert json_obj["join"]["token"] == ""
 
 
 def test_extract_direct_msg_send_response():

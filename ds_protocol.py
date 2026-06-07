@@ -48,42 +48,8 @@ def join_msg(username: str, password: str) -> str:
     return json.dumps(message)
 
 
-def post_msg(token: str, entry: str, timestamp: str) -> str:
-    '''
-    Create a json string with the appropriate keys
-    and values to post a message to a ds server
-
-    :param token: The token associated with the user.
-    :param entry: The entry to be sent to the server.
-    :param timestamp: The timestamp associated with the entry.
-    '''
-    message = {
-        "token": token,
-        "post": {
-            "entry": entry,
-            "timestamp": timestamp
-        }
-    }
-    return json.dumps(message)
-
-
-def bio_msg(token: str, entry: str, timestamp: str) -> str:
-    '''
-    Create a json string with the appropriate keys
-    and values to update a bio on a ds server
-
-    :param token: The token associated with the user.
-    :param entry: The entry to be updated on the server.
-    :param timestamp: The timestamp associated with the entry.
-    '''
-    message = {
-        "token": token,
-        "bio": {
-            "entry": entry,
-            "timestamp": timestamp
-        }
-    }
-    return json.dumps(message)
+# Deleted unused bio_msg and post_msg functions 
+# since they are not needed for the assignment.
 
 
 def direct_msg(token: str, entry: str, recipient: str, timestamp: str) -> str:
