@@ -79,7 +79,7 @@ class DirectMessenger:
                 s.connect((self.dsuserver, PORT))
                 f = s.makefile('r')
 
-                if '"join: "' not in request:
+                if self.token is None:
                     join_request = ds_protocol.join_msg(self.username, self.password) + "\n"
                     s.sendall(join_request.encode())
                     join_response = f.readline()
@@ -87,10 +87,11 @@ class DirectMessenger:
                     join_tuple = ds_protocol.extract_json(join_response)
                     if join_tuple.type != 'ok':
                         return None
-                        
-                    req_dict = json.loads(request)
-                    req_dict['token'] = join_tuple.token
-                    request = json.dumps(req_dict)
+                    self.token = join_tuple.token
+
+                req_dict = json.loads(request)
+                req_dict['token'] = self.token
+                request = json.dumps(req_dict)
 
                 formatted_request = request + '\n'
                 s.sendall(formatted_request.encode())

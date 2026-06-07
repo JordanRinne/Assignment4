@@ -175,15 +175,20 @@ class MainApp(tk.Frame):
     def send_message(self):
         # You must implement this!
         message_text = self.body.get_text_entry()
-        
+        print(f"DEBUG - Message text: '{message_text}'")
+        print(f"DEBUG - Recipient: '{self.recipient}'")
+        print(f"DEBUG - Messenger initialized?: {self.direct_messenger is not None}")
         # Guard clause: don't send if there's no text or no recipient selected!
         if not message_text or not self.recipient or not self.direct_messenger:
+            print("DEBUG - Send aborted! One of the three items above is missing.")
             return 
             
         # 2. Send it over the network!
+        print("DEBUG - Attempting to send over network...")
         success = self.direct_messenger.send(message_text, self.recipient)
         
         if success:
+            print("DEBUG - Network send successful! Drawing on screen...")
             # 3. Visually draw the message on the right side of the screen
             self.body.insert_user_message(message_text)
             
@@ -239,6 +244,8 @@ class MainApp(tk.Frame):
         # You must implement this!
         # You must configure and instantiate your
         # DirectMessenger instance after this line.
+        self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
+        self.profile.load_profile(f"{self.username}.dsu")
 
     def publish(self, message:str):
         # You must implement this!
