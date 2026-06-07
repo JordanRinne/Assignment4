@@ -72,30 +72,6 @@ class DirectMessenger:
         
         return self._convert_messages(response.messages)
 
-    """
-    def _ensure_token(self) -> bool:
-        if self.token is not None:
-            return True
-        
-        return self._join()
-
-
-    def _join(self) -> bool:
-        if not self.dsuserver or not self.username or not self.password:
-            return False
-
-        request = ds_protocol.join_msg(self.username, self.password)
-        response = self._send_request(request)
-
-        if response is None:
-            return False
-
-        if response.type == 'ok' and response.token:
-            self.token = response.token
-            return True
-
-        return False
-    """
 
     def _send_request(self, request: str):
         try:
