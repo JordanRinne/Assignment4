@@ -8,6 +8,7 @@ from tkinter import ttk, filedialog, simpledialog
 from typing import Text
 from Profile import Profile
 from ds_messenger import DirectMessenger
+import time
 
 class Body(tk.Frame):
     def __init__(self, root, recipient_selected_callback=None):
@@ -173,17 +174,61 @@ class MainApp(tk.Frame):
 
     def send_message(self):
         # You must implement this!
-        pass
+        message_text = self.body.get_text_entry()
+        
+        # Guard clause: don't send if there's no text or no recipient selected!
+        if not message_text or not self.recipient or not self.direct_messenger:
+            return 
+            
+        # 2. Send it over the network!
+        success = self.direct_messenger.send(message_text, self.recipient)
+        
+        if success:
+            # 3. Visually draw the message on the right side of the screen
+            self.body.insert_user_message(message_text)
+            
+            # 4. Save the message to your local dictionary
+            msg_data = {
+                "entry": message_text,
+                "recipient": self.recipient,
+                "timestamp": str(time.time()),
+                "sender": self.username,
+                "direction": "sent"
+            }
+            self.profile.messages[self.recipient].append(msg_data)
+            self.profile.save_profile(f"{self.username}.dsu")
+            
+            # 5. Clear the input box so you can type your next message
+            self.body.set_text_entry("")
+        else:
+            print("Failed to send message over the network.")
 
     def add_contact(self):
         # You must implement this!
         # Hint: check how to use tk.simpledialog.askstring to retrieve
         # the name of the new contact, and then use one of the body
         # methods to add the contact to your contact list
-        pass
+        new_contact = simpledialog.askstring("Add Contact", "Enter friend's username:")
+        if new_contact:
+            self.profile.add_recipient(new_contact)
+            if self.username:
+                self.profile.save_profile(f"{self.username}.dsu")
+            self.body.insert_contact(new_contact)
 
     def recipient_selected(self, recipient):
         self.recipient = recipient
+
+        # 2. Clear the main chat window completely
+        self.body.entry_editor.delete(1.0, tk.END)
+        
+        # 3. Look up this friend in your profile and print their history
+        if recipient in self.profile.messages:
+            for msg_dict in self.profile.messages[recipient]:
+                # If you sent it, put it on the right. Otherwise, left.
+                if msg_dict.get("sender") == self.username:
+                    self.body.insert_user_message(msg_dict["entry"])
+                else:
+                    self.body.insert_contact_message(msg_dict["entry"])
 
     def configure_server(self):
         ud = NewContactDialog(self.root, "Configure Account",

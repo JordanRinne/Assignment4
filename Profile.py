@@ -174,7 +174,7 @@ class Profile:
     def save_profile(self, path: str) -> None:
         p = Path(path)
 
-        if p.exists() and p.suffix == '.dsu':
+        if p.suffix == '.dsu':
             try:
                 f = open(p, 'w')
                 json.dump(self.__dict__, f)
