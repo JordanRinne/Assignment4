@@ -224,12 +224,8 @@ class MainApp(tk.Frame):
     def recipient_selected(self, recipient):
         self.recipient = recipient
 
-        try:
-            self.body.empty_right() 
-        except AttributeError:
-            pass
         # 2. Clear the main chat window completely
-        #self.body.entry_editor.delete(1.0, tk.END)
+        self.body.entry_editor.delete('1.0', 'end')
         
         # 3. Look up this friend in your profile and print their history
         if recipient in self.profile.messages:
@@ -273,7 +269,9 @@ class MainApp(tk.Frame):
                         self.profile.add_recipient(sender)
                         self.body.insert_contact(sender)
                     
-                    self.body.insert_contact_message(f"{sender}: {entry}")
+                    if self.recipient != sender:
+                        self.body.insert_contact_message(f"{sender}: {entry}")
+
                     msg_data = {
                         "message": entry,
                         "entry": entry,
