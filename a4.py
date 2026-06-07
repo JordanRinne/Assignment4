@@ -73,13 +73,14 @@ class Body(tk.Frame):
         message_frame = tk.Frame(master=self, bg="yellow")
         message_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=False)
 
-        self.message_editor = tk.Text(message_frame, width=0, height=5)
+        self.message_editor = tk.Text(message_frame, width=0, height=5, bg="#DAD7CB")
         self.message_editor.pack(fill=tk.BOTH, side=tk.LEFT,
                                  expand=True, padx=0, pady=0)
 
         self.entry_editor = tk.Text(editor_frame, width=0, height=5)
-        self.entry_editor.tag_configure('entry-right', justify='right')
-        self.entry_editor.tag_configure('entry-left', justify='left')
+        self.entry_editor.tag_configure('entry-right', justify='right', foreground="#09AD2F")
+        self.entry_editor.tag_configure('entry-left', justify='left', foreground="#093B8B")
+        self.entry_editor.configure(bg="#A9F0F9")
         self.entry_editor.pack(fill=tk.BOTH, side=tk.LEFT,
                                expand=True, padx=0, pady=0)
 
@@ -109,7 +110,7 @@ class Footer(tk.Frame):
         # Here you must configure the button to bind its click to
         # the send_click() function.
         save_button.pack(fill=tk.BOTH, side=tk.RIGHT, padx=5, pady=5)
-
+        save_button.configure(fg="#09AD2F")
         self.footer_label = tk.Label(master=self, text="Ready.")
         self.footer_label.pack(fill=tk.BOTH, side=tk.LEFT, padx=5)
 
