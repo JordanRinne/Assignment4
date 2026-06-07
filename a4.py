@@ -194,6 +194,7 @@ class MainApp(tk.Frame):
             
             # 4. Save the message to your local dictionary
             msg_data = {
+                "message": message_text,
                 "entry": message_text,
                 "recipient": self.recipient,
                 "timestamp": str(time.time()),
@@ -223,17 +224,22 @@ class MainApp(tk.Frame):
     def recipient_selected(self, recipient):
         self.recipient = recipient
 
+        try:
+            self.body.empty_right() 
+        except AttributeError:
+            pass
         # 2. Clear the main chat window completely
-        self.body.entry_editor.delete(1.0, tk.END)
+        #self.body.entry_editor.delete(1.0, tk.END)
         
         # 3. Look up this friend in your profile and print their history
         if recipient in self.profile.messages:
             for msg_dict in self.profile.messages[recipient]:
                 # If you sent it, put it on the right. Otherwise, left.
-                if msg_dict.get("sender") == self.username:
-                    self.body.insert_user_message(msg_dict["entry"])
+                text = msg_dict.get("message") or msg_dict.get("entry") or ""
+                if msg_dict.get("sender") == self.username or msg_dict.get("direction") == "sent":
+                    self.body.insert_user_message(text)
                 else:
-                    self.body.insert_contact_message(msg_dict["entry"])
+                    self.body.insert_contact_message(text)
 
     def configure_server(self):
         ud = NewContactDialog(self.root, "Configure Account",
@@ -244,7 +250,7 @@ class MainApp(tk.Frame):
 
         self.direct_messenger = DirectMessenger(self.server, self.username, self.password)
         self.profile.load_profile(f"{self.username}.dsu")
-        
+
         self.check_new()
 
     def publish(self, message:str):
@@ -269,6 +275,7 @@ class MainApp(tk.Frame):
                     
                     self.body.insert_contact_message(f"{sender}: {entry}")
                     msg_data = {
+                        "message": entry,
                         "entry": entry,
                         "recipient": self.username,
                         "timestamp": timestamp,
