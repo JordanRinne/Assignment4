@@ -59,8 +59,9 @@ class Body(tk.Frame):
 
         self.posts_tree = ttk.Treeview(posts_frame)
         self.posts_tree.bind("<<TreeviewSelect>>", self.node_select)
-        self.posts_tree.pack(fill=tk.BOTH, side=tk.TOP,
-                             expand=True, padx=5, pady=5)
+        self.posts_tree.pack(
+            fill=tk.BOTH, side=tk.TOP, expand=True, padx=5, pady=5
+        )
 
         entry_frame = tk.Frame(master=self, bg="")
         entry_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
@@ -74,22 +75,32 @@ class Body(tk.Frame):
         message_frame = tk.Frame(master=self, bg="yellow")
         message_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=False)
 
-        self.message_editor = tk.Text(message_frame, width=0, height=5, bg="#DAD7CB")
-        self.message_editor.pack(fill=tk.BOTH, side=tk.LEFT,
-                                 expand=True, padx=0, pady=0)
+        self.message_editor = tk.Text(
+            message_frame, width=0, height=5, bg="#DAD7CB"
+        )
+        self.message_editor.pack(
+            fill=tk.BOTH, side=tk.LEFT, expand=True, padx=0, pady=0
+        )
 
         self.entry_editor = tk.Text(editor_frame, width=0, height=5)
-        self.entry_editor.tag_configure('entry-right', justify='right', foreground="#09AD2F")
-        self.entry_editor.tag_configure('entry-left', justify='left', foreground="#093B8B")
+        self.entry_editor.tag_configure(
+            'entry-right', justify='right', foreground="#09AD2F"
+        )
+        self.entry_editor.tag_configure(
+            'entry-left', justify='left', foreground="#093B8B"
+        )
         self.entry_editor.configure(bg="#A9F0F9")
-        self.entry_editor.pack(fill=tk.BOTH, side=tk.LEFT,
-                               expand=True, padx=0, pady=0)
+        self.entry_editor.pack(
+            fill=tk.BOTH, side=tk.LEFT, expand=True, padx=0, pady=0
+        )
 
-        entry_editor_scrollbar = tk.Scrollbar(master=scroll_frame,
-                                              command=self.entry_editor.yview)
+        entry_editor_scrollbar = tk.Scrollbar(
+            master=scroll_frame, command=self.entry_editor.yview
+        )
         self.entry_editor['yscrollcommand'] = entry_editor_scrollbar.set
-        entry_editor_scrollbar.pack(fill=tk.Y, side=tk.LEFT,
-                                    expand=False, padx=0, pady=0)
+        entry_editor_scrollbar.pack(
+            fill=tk.Y, side=tk.LEFT, expand=False, padx=0, pady=0
+        )
 
 
 class Footer(tk.Frame):
@@ -242,7 +253,10 @@ class MainApp(tk.Frame):
             for msg_dict in self.profile.messages[recipient]:
                 # If you sent it, put it on the right. Otherwise, left.
                 text = msg_dict.get("message") or msg_dict.get("entry") or ""
-                if msg_dict.get("sender") == self.username or msg_dict.get("direction") == "sent":
+                if (
+                    msg_dict.get("sender") == self.username
+                    or msg_dict.get("direction") == "sent"
+                ):
                     self.body.insert_user_message(text)
                 else:
                     self.body.insert_contact_message(text)
