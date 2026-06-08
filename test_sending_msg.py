@@ -6,10 +6,10 @@ import time
 from ds_messenger import DirectMessenger
 
 print("Connecting as testuser2...")
-# Initialize the messenger as the "other" user
+
 messenger = DirectMessenger("127.0.0.1", "testuser2", "password123")
 
-# Send a message to your main account
+
 message_text = f"WOOOAHHHHH..... The time is {time.time()}"
 recipient = "testuser"
 

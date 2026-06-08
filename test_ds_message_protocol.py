@@ -5,7 +5,6 @@
 
 import ds_protocol
 import json
-#import pytest
 
 
 def test_direct_message():
@@ -15,7 +14,7 @@ def test_direct_message():
         entry="Direct Message Entry",
         timestamp="2024-06-01T12:00:00Z"
     )
-    
+
     json_obj = json.loads(result)
 
     assert json_obj["token"] == "abc123"
@@ -26,7 +25,7 @@ def test_direct_message():
 
 def test_direct_message_new():
     result = ds_protocol.direct_msg_new(token="abc123")
-    
+
     json_obj = json.loads(result)
 
     assert json_obj["token"] == "abc123"
@@ -35,7 +34,7 @@ def test_direct_message_new():
 
 def test_direct_message_all():
     result = ds_protocol.direct_msg_all(token="abc123")
-    
+
     json_obj = json.loads(result)
 
     assert json_obj["token"] == "abc123"

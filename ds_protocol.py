@@ -48,7 +48,7 @@ def join_msg(username: str, password: str) -> str:
     return json.dumps(message)
 
 
-# Deleted unused bio_msg and post_msg functions 
+# Deleted unused bio_msg and post_msg functions
 # since they are not needed for the assignment.
 
 
